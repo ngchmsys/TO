@@ -8,8 +8,8 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class ArticlesFixture extends TestFixture
 {
-    // public $import = ['model' => 'Articles'];
-    public $import = ['table' => 'articles', 'connection' => 'test', 'records'=> True];
+    public $import = ['model' => 'Articles', 'records' => true];
+    // public $import = ['table' => 'articles', 'connection' => 'test', 'records'=> true];
     /**
      * Fields
      *

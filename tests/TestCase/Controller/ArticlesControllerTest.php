@@ -15,13 +15,19 @@ class ArticlesControllerTest extends TestCase
 {
     use IntegrationTestTrait;
 
+    public static function beforSetup()
+    {
+        $DBData = TableRegistry::getTableLocator()->get('Articles')->all();
+        echo "\n!!!! COUNT: " . $DBData->find('all')->count();
+    }
     public function setUp()
     {
         parent::setUp();
         // $this->autoFixtures = false;
         // $this->dropTables = false;
         $this->enableCsrfToken();
-        // $this->Articles = TableRegistry::getTableLocator()->get('Articles');
+        $this->Articles = TableRegistry::getTableLocator()->get('Articles');
+        echo "\n!!!! COUNT: " . $this->Articles->find('all')->count();
         // print_r($this->Articles->find('all')->all());
         // echo "*************************************\n";
         // // var_dump($this->Articles->find('all')->all()); # tsmyappデータベースから取得したデータ
@@ -34,6 +40,7 @@ class ArticlesControllerTest extends TestCase
      * @var array
      */
     public $fixtures = ['app.Articles',];
+    // public $fixtures = [];
 
     /**
      * Test index method
@@ -66,7 +73,7 @@ class ArticlesControllerTest extends TestCase
     {
         $data = [
             [
-                'id' => 1,
+//                'id' => 1,
                 'title' => 'My Set Data !!!',
                 'body' => 'Lorem ipsum dolo convallis.',
                 'category_id' => 1,
@@ -74,7 +81,7 @@ class ArticlesControllerTest extends TestCase
                 'modified' => '2021-03-29 15:46:00',
             ],
             [
-                'id' => 2,
+//                'id' => 2,
                 'title' => 'My Set Data2 !!!',
                 'body' => 'ASD rem ipolo convallis.',
                 'category_id' => 2,
@@ -129,16 +136,23 @@ class ArticlesControllerTest extends TestCase
                 'id' => 2,
             ],
         ];
-        // foreach($data as $d) {
-        //     $q = $this->Articles->find()->where(['id' => $d['id']]);
-        //     $this->assertEquals(1, $q->count());
-        //     $this->post("/articles/delete/{$d['id']}");
-        //     $this->assertResponseSuccess();
-        //     $q = $this->Articles->find()->where(['id' => $d['id']]);
-        //     $this->assertEquals(0, $q->count());
-        // }
+        foreach($data as $d) {
+            $q = $this->Articles->get($d['id']);
+            $this->assertEquals(1, $q->count());
+
+            $this->post("/articles/delete/{$d['id']}");
+            $this->assertResponseSuccess();
+
+            $q = $this->Articles->get($d['id']);
+            $this->assertEquals(0, $q->count());
+        }
 
         // print_r($q->find('all')->all());
         // echo "*************************************\n";
+    }
+
+    public function afterTearDown()
+    {
+        
     }
 }

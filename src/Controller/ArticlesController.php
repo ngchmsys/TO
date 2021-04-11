@@ -16,7 +16,9 @@ class ArticlesController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->categories = TableRegistry::get('Categories');
+        $this->categories = TableRegistry::getTableLocator()->get('Categories');
+        $this->viewBuilder()->enableAutoLayout();
+        $this->viewBuilder()->setLayout('spectre');
     }
     /**
      * Index method
