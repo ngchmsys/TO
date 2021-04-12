@@ -15,10 +15,22 @@ class ArticlesControllerTest extends TestCase
 {
     use IntegrationTestTrait;
 
-    public static function beforSetup()
+    public static function DBDataProvider()
     {
-        $DBData = TableRegistry::getTableLocator()->get('Articles')->all();
+        $q = TableRegistry::getTableLocator()->get('Articles');
+        return $q;
+    }
+
+    public static function setUpBeforeClass()
+    {
+        $DBData = self::DBDataProvider();
         echo "\n!!!! COUNT: " . $DBData->find('all')->count();
+        print_r($DBData->find('all'));
+        $entities = $DBData->newEntities($DBData->find('all')->toArray());
+        foreach($entities as $e) {
+            $DBData->save($e);
+            echo "\n!!!! COUNT: " . $DBData->find('all')->count();
+        }
     }
     public function setUp()
     {
